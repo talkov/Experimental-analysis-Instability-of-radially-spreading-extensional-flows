@@ -10,7 +10,21 @@ from scipy.fft import fft, ifft
 
 
 
+def cart2pol(x, y):
+    '''
+    Parameters:
+    - x: float, x coord. of vector end
+    - y: float, y coord. of vector end
+    Returns:
+    - r: float, vector amplitude
+    - theta: float, vector angle
+    '''
 
+    z = x + y * 1j
+    Test_r,Test_theta = np.abs(z), np.angle(z,True)
+    if Test_theta < 0:
+        Test_theta += 360
+    return Test_r,Test_theta
 
 
 # global variable
@@ -34,20 +48,12 @@ img = cv2.imread(file)
 
 
 
-path = "C:/Users/Tal/Desktop/pythonProject/processed"
+path = "" #Enter path for the processed image
 
 #--------------------------------------------------------CROP----------------------------------------------------------
-
-
-
 cv2.imshow("original", img)
-
-
-
 cv2.waitKey(0)
 cv2.destroyAllWindows()
-
-
 
 # convert sourece image to HSC color mode
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -71,11 +77,6 @@ cv2.destroyAllWindows()
 
 
 #---------------------------------------------------------seperation----------------------------------------------------
-
-
-
-
-
 # keep in mind that open CV loads images as BGR not RGB
 image = res
 cv2.waitKey(0)
@@ -94,6 +95,7 @@ cv2.waitKey(0)
 cv2.destroyAllWindows()
 # save the resized image
 #cv2.imwrite("resizedParts.png", resizedImage, [cv2.IMWRITE_PNG_COMPRESSION, 0])
+
 ## CONVERT TO GRAYSCALE
 # convert image to grayscale
 grayImage=cv2.cvtColor(resizedImage, cv2.COLOR_BGR2GRAY)
@@ -255,20 +257,12 @@ teta_radian = np.array(teta_radian)
 
 
 #--------------------------------------------------------------------------------------------------------------------
-# Define domain
-dx = 0.00001
-L = np.pi
-
-
-
-
-
 n=1024
 w = np.exp(-2j*np.pi/n)
 J,K = np.meshgrid(np.arange(n),np.arange(n))
 DFT = np.power(w,J*K)
 DFT = np.real(DFT)
-#print(DFT)
+
 
 plt.imshow(DFT)
 plt.show()
@@ -279,12 +273,6 @@ begin = 0
 end = 360
 jump = 45/4096
 X_interp_Axis = np.arange(begin, end, jump)
-
-
-
-
-
-
 
 
 f_sort = np.interp(X_interp_Axis,soretrdTeta,sorterdraiu)
@@ -316,17 +304,10 @@ beginTime = 0
 
 endTime = 360
 
-# Frequency of the signals
-
-signal1Frequency = 4
-
-signal2Frequency = 7
-
 # Time points
 
 time = np.arange(beginTime, endTime, samplingInterval)
 
-# Create two sine waves
 
 amplitude1 = sorterdraiu
 
@@ -338,7 +319,7 @@ figure, axis = plt.subplots(3, 1)
 
 plt.subplots_adjust(hspace=1)
 
-# Time domain representation for sine wave 1
+# Time domain representation for original plot
 
 axis[0].set_title('RADIUS(THETA)')
 
@@ -352,7 +333,7 @@ axis[0].set_ylabel('Radius')
 
 amplitude = f_sort
 
-# Time domain representation of the result
+# Time domain representation of the interpolation
 
 axis[1].set_title('interpolated function')
 
@@ -426,18 +407,3 @@ interpool_freq = freq_rez * inter_bin
 plt.show()
 
 #
-def cart2pol(x, y):
-    '''
-    Parameters:
-    - x: float, x coord. of vector end
-    - y: float, y coord. of vector end
-    Returns:
-    - r: float, vector amplitude
-    - theta: float, vector angle
-    '''
-
-    z = x + y * 1j
-    Test_r,Test_theta = np.abs(z), np.angle(z,True)
-    if Test_theta < 0:
-        Test_theta += 360
-    return Test_r,Test_theta
